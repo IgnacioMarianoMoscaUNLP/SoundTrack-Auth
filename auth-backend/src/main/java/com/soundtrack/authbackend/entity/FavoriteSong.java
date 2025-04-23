@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class FavoriteSong {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
     private String song;
