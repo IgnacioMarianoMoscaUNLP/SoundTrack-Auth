@@ -5,7 +5,7 @@
 - Frontend: Angular (mínimo para demostración).  
 
 **Descripción**:  
-Aplicación web fullstack que permite a los usuarios buscar canciones mediante la API de Spotify, autenticarse con JWT y guardar sus canciones favoritas en una base de datos relacional.  
+Aplicación web que permite a los usuarios buscar canciones mediante la API de Spotify, autenticarse con JWT y guardar sus canciones favoritas en una base de datos relacional.  
 
 **Destacado**:  
 - ✅ Autenticación segura con **JWT** (tokens de acceso/refresh).  
