@@ -1,7 +1,14 @@
 package com.soundtrack.authbackend.repository;
 
-import com.soundtrack.authbackend.entity.FavoriteSong;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface FavoriteSongRepository extends JpaRepository<FavoriteSong, Long> {
+import com.soundtrack.authbackend.entity.FavoriteSong;
+
+
+public interface FavoriteSongRepository extends MongoRepository<FavoriteSong, ObjectId> {
+    
+    // Custom query methods can be defined here if needed
+    // For example, to find favorite songs by user ID:
+    // List<FavoriteSong> findByUserId(String userId);
 }

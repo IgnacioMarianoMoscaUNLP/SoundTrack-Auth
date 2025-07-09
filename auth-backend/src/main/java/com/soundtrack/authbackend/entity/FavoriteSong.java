@@ -1,18 +1,19 @@
 package com.soundtrack.authbackend.entity;
 
 
-import jakarta.persistence.*;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+@Document(collection = "favs")
 @Getter
 @Setter
 public class FavoriteSong {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long id;
+    private ObjectId id;
     private String song;
     private String artist;
     private String album;

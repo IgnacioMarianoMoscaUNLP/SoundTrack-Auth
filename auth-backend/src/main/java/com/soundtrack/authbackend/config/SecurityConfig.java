@@ -22,6 +22,7 @@ public class SecurityConfig {
     private final JwtConfig jwtConfig;
     private final UserRepository userRepository;
   
+    /*  
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
      return    http
@@ -34,7 +35,8 @@ public class SecurityConfig {
                         .oauth2ResourceServer(configurer -> configurer.jwt(Customizer.withDefaults()))
                         .build();
     }
-    @Bean
+    */
+  /* @Bean
     public JwtDecoder jwtDecoder(){
         return NimbusJwtDecoder.withSecretKey(jwtConfig.getSecretKey())
                 .build();
@@ -43,5 +45,5 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    }*/  
 }

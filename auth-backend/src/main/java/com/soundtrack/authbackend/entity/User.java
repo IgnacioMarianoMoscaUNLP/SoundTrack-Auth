@@ -1,7 +1,6 @@
 package com.soundtrack.authbackend.entity;
 
-
-import jakarta.persistence.*;
+import com.soundtrack.authbackend.entity.FavoriteSong;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,18 +10,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+
+@Document(collection = "users")
 @Getter
 @Setter
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long id;
+    
+    private ObjectId id;
 
-    @Column(unique = true, length = 100, nullable = false)
+    
     private String email;
-    @Column(nullable = false)
+    
     private String password;
 
 
@@ -34,12 +38,7 @@ public class User implements UserDetails {
 
     public User(){}
 
-    @OneToMany
-    @JoinTable(
-            name="user_favoriteSongs",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "favorite_song_id")
-    )
+    
     private List<FavoriteSong>favoriteSongs;
 
 
