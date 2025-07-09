@@ -10,7 +10,7 @@ Aplicación web que permite a los usuarios buscar canciones mediante la API de S
 **Destacado**:  
 - ✅ Autenticación segura con **JWT** (tokens de acceso/refresh).  
 - ✅ Integración con **API externa** (Spotify) usando Spring Boot.  
-- ✅ Gestión de base de datos relacional (MySQL) para usuarios y favoritos.  
+- ✅ Gestión de base de datos no relacional (Mongodb) para usuarios y favoritos.  
 - ✅ Pruebas unitarias en servicios críticos (JUnit + Mockito).  
 
 **Objetivo personal**:  
@@ -18,4 +18,4 @@ Demostrar mi capacidad para desarrollar sistemas backend robustos, manejar segur
 
 **Enlaces**:  
 - [Código en GitHub](https://github.com/tu-usuario/soundtrack-auth)  
-- [Demo en vivo](https://tu-demo.com) *(opcional)*  
+- [Demo en vivo]  
