@@ -1,4 +1,4 @@
 package com.soundtrack.authbackend.dto;
 
-public class SongDTO {
+public class TrackDTO {
 }
