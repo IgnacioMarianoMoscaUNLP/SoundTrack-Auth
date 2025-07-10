@@ -32,3 +32,12 @@ build/
 ### VS Code ###
 .vscode/
 /src/main/resources/application.properties
+# Keystores - archivos de certificados
+*.jks
+*.keystore
+*.p12
+
+# Otros archivos sensibles
+*.log
+*.tmp
+local.properties

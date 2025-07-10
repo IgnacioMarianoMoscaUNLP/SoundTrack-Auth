@@ -1,5 +1,5 @@
 package com.soundtrack.authbackend.service;
 
-public class PlayListService {
+public class SpotifyApiService {
     
 }

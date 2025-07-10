@@ -30,4 +30,5 @@ public class PlaylistController {
     public ResponseEntity<String> moodBasedPlaylist() {
         // Aquí manejarías la lógica para la playlist basada en el estado de ánimo
         return ResponseEntity.ok("Mood-based playlist data");   
+    }
 }

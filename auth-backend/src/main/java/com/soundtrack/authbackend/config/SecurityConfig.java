@@ -18,24 +18,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @Configuration
 @AllArgsConstructor
 public class SecurityConfig {
-  
-    private final JwtConfig jwtConfig;
-    private final UserRepository userRepository;
-  
-    /*  
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
      return    http
                .csrf(AbstractHttpConfigurer::disable)
-               .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                    .requestMatchers("/auth/**").permitAll() 
-                    .anyRequest().authenticated())
-                    .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                        .oauth2ResourceServer(configurer -> configurer.jwt(Customizer.withDefaults()))
                         .build();
     }
-    */
+    
   /* @Bean
     public JwtDecoder jwtDecoder(){
         return NimbusJwtDecoder.withSecretKey(jwtConfig.getSecretKey())
