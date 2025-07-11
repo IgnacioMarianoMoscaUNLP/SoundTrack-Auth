@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,16 +26,17 @@ import com.soundtrack.authbackend.service.AuthService;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    @Value("${spotify.client.id}")
+    private String spotifyClientId;
+
     @Autowired
     private AuthService authService;
-
-
+    
     @GetMapping("/login")           // Redirige a Spotify OAuth
     public ResponseEntity<String> loginWithSpotify() {
         System.out.println("Login with Spotify called");
-        String state = generateRandomString(16);
-        String clientId = ""; // Reemplaza con tu Client ID
-        String redirectUri = "http://127.0.0.1:8443/api/auth/callback"; // Reemplaza con tu URI de redirección
+        String state = generateRandomString(16);        
+        String redirectUri = "http://127.0.0.1:8080/api/auth/callback"; // Reemplaza con tu URI de redirección
         String scope = "user-read-private user-read-email user-top-read user-read-recently-played";        
         String encodedScope = URLEncoder.encode(scope, StandardCharsets.UTF_8);
 
@@ -44,7 +46,7 @@ public class AuthController {
                 .host("accounts.spotify.com")
                 .path("/authorize")
                 .queryParam("response_type", "code")
-                .queryParam("client_id", clientId)
+                .queryParam("client_id", spotifyClientId)
                 .queryParam("scope", encodedScope)
                 .queryParam("redirect_uri", redirectUri)
                 .queryParam("state", state)
