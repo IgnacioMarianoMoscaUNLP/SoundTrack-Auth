@@ -6,7 +6,10 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 // import java.net.http.HttpHeaders; // Removed to avoid conflict with Spring's HttpHeaders
 import java.security.SecureRandom;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Base64;
+
+import com.soundtrack.authbackend.entity.SpotifySession;
 import com.soundtrack.authbackend.service.AuthService;
+import com.soundtrack.authbackend.service.JwtService;
+import com.soundtrack.authbackend.service.SessionStore;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -39,6 +46,10 @@ public class AuthController {
     private String spotifyClientId;
     @Value("${spotify.client.secret}")
     private String spotifyClientSecret;
+    @Autowired
+    private SessionStore sessionStore;
+    @Autowired
+    private JwtService jwtService;
 
 
     @Autowired
@@ -118,10 +129,22 @@ public class AuthController {
     if (response.getStatusCode().is2xxSuccessful()) {
         Map<String, Object> responseBody = response.getBody();
 
-        // Por ejemplo, guardar token en sesión o devolver al frontend
-        session.setAttribute("access_token", responseBody.get("access_token"));
+        SpotifySession spotifySession = new SpotifySession();        
+        spotifySession.setAccessToken("access_token");
+        spotifySession.setRefreshToken("refresh_token");
+        spotifySession.setExpiresAt(Instant.now().plus(3600, ChronoUnit.SECONDS));   
 
-        return ResponseEntity.ok(responseBody);
+        // 3. Crear un ID único de sesión
+        String sessionId = UUID.randomUUID().toString();
+
+        // 4. Guardar en el SessionStore
+        sessionStore.save(sessionId, spotifySession);
+
+        // 5. Generar un JWT con ese sessionId
+        String jwt = jwtService.generateToken(sessionId);
+
+        // 6. Enviar el JWT al frontend
+        return ResponseEntity.ok(Map.of("token", jwt));
     } else {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error al obtener token de Spotify");
