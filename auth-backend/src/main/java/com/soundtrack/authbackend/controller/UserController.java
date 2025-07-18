@@ -1,7 +1,7 @@
 package com.soundtrack.authbackend.controller;
 
 import com.soundtrack.authbackend.dto.UserDTO;
-import com.soundtrack.authbackend.entity.User;
+
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

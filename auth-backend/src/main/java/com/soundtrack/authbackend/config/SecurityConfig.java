@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.soundtrack.authbackend.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -23,7 +22,7 @@ public class SecurityConfig {
     
     
     private final JwtConfig jwtConfig;
-    private final UserRepository userRepository;
+    
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

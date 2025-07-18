@@ -149,7 +149,7 @@ public void callbackSpotify(
         // 5. Generar un JWT con ese sessionId
         String jwt = jwtService.generateToken(sessionId);
 
-        System.out.println("llego a la tercera");
+        System.out.println(jwt);
         // 6. Enviar el JWT al frontend
         String frontendRedirect = "http://localhost:4200/token=" + jwt;
         HttpHeaders redirectHeaders = new HttpHeaders();
