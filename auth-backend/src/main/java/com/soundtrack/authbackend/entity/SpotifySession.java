@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class SpotifySession {
     
-    private String accessToken;
+    private Object accessToken;
     private Instant expiresAt;
     private String displayName;
     // getters/setters

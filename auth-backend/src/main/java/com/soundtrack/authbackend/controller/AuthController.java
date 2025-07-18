@@ -93,7 +93,7 @@ public class AuthController {
         return new BigInteger(130, random).toString(32).substring(0, length);
     }
 @GetMapping("/callback")
-public void callbackSpotify(
+public ResponseEntity callbackSpotify(
     @RequestParam(required = false) String code,
     @RequestParam(required = false) String state,
     HttpSession session) {
@@ -124,19 +124,11 @@ public void callbackSpotify(
             Map.class
     );
     System.out.println("Response from Spotify: " + response);
-    getAccessToken(response);
-}
-
-
-    @PostMapping("/token")          // Obtiene el token de acceso
-    public ResponseEntity<String> getAccessToken(ResponseEntity<Map> response) {
-            System.out.println("Response from Spotify: " + response);
-    System.out.println("Aca llega");
     if (response.getStatusCode().is2xxSuccessful()) {
         Map<String, Object> responseBody = response.getBody();
 
         SpotifySession spotifySession = new SpotifySession();
-        spotifySession.setAccessToken((String) responseBody.get("access_token"));        
+        spotifySession.setAccessToken( responseBody.get("access_token"));        
         Integer expiresIn = (Integer) responseBody.get("expires_in");
         spotifySession.setExpiresAt(Instant.now().plus(expiresIn != null ? expiresIn : 3600, ChronoUnit.SECONDS));
 
@@ -150,18 +142,19 @@ public void callbackSpotify(
         String jwt = jwtService.generateToken(sessionId);
 
         System.out.println(jwt);
-        // 6. Enviar el JWT al frontend
-        String frontendRedirect = "http://localhost:4200/token=" + jwt;
-        HttpHeaders redirectHeaders = new HttpHeaders();
-        redirectHeaders.setLocation(URI.create(frontendRedirect));
-        
-        return ResponseEntity.status(HttpStatus.FOUND).headers(redirectHeaders).build();
+    
+        headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + jwt); // o "X-Auth-Token", según prefieras
+
+        return ResponseEntity.ok()
+        .headers(headers)
+        .build();
 
     } else {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error al obtener token de Spotify");
     }
-    }
+}
 
 
 
