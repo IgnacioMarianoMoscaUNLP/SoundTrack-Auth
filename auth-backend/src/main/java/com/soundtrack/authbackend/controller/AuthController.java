@@ -14,6 +14,7 @@ import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+// import org.springframework.boot.web.servlet.server.Session; // Removed, use HttpSession instead
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -56,9 +58,10 @@ public class AuthController {
     private AuthService authService;
     
     @GetMapping("/login")           // Redirige a Spotify OAuth
-    public ResponseEntity<String> loginWithSpotify() {
-        System.out.println("Login with Spotify called");
-        String state = generateRandomString(16);        
+    public ResponseEntity<String> loginWithSpotify(HttpSession session) {        
+        String state = generateRandomString(16);
+        session.setAttribute("oauth_state", state);        
+        
         String redirectUri = "http://127.0.0.1:8080/api/auth/callback"; // Reemplaza con tu URI de redirección
         String scope = "user-read-private user-read-email user-top-read user-read-recently-played";        
         String encodedScope = URLEncoder.encode(scope, StandardCharsets.UTF_8);
@@ -89,19 +92,15 @@ public class AuthController {
         SecureRandom random = new SecureRandom();
         return new BigInteger(130, random).toString(32).substring(0, length);
     }
-    @GetMapping("/callback")
-    public ResponseEntity<?> callbackSpotify(
-        @RequestParam(required = false) String code,
-        @RequestParam(required = false) String state,
-        HttpSession session) {
+@GetMapping("/callback")
+public void callbackSpotify(
+    @RequestParam(required = false) String code,
+    @RequestParam(required = false) String state,
+    HttpSession session) {
 
-    String sessionState = (String) session.getAttribute("oauth_state");
-
-    if (state == null) {
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION, "/#?error=state_mismatch")
-                .build();
-    }
+    /*if (!state.equals(session.getAttribute("oauth_state"))) {
+        return redirectToErrorPage("Invalid state parameter");
+    }*/
 
     // Intercambio de code por access_token
     String credentials = spotifyClientId + ":" + spotifyClientSecret;
@@ -113,9 +112,8 @@ public class AuthController {
     headers.set("Authorization", "Basic " + encodedCredentials);
 
     MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-    body.add("grant_type", "authorization_code");
-    body.add("code", code);
-    body.add("redirect_uri", "http://127.0.0.1:8080/api/auth/callback");
+    body.add("grant_type", "client_credentials");
+    
 
     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
@@ -125,38 +123,48 @@ public class AuthController {
             request,
             Map.class
     );
+    System.out.println("Response from Spotify: " + response);
+    getAccessToken(response);
+}
 
+
+    @PostMapping("/token")          // Obtiene el token de acceso
+    public ResponseEntity<String> getAccessToken(ResponseEntity<Map> response) {
+            System.out.println("Response from Spotify: " + response);
+    System.out.println("Aca llega");
     if (response.getStatusCode().is2xxSuccessful()) {
         Map<String, Object> responseBody = response.getBody();
 
-        SpotifySession spotifySession = new SpotifySession();        
-        spotifySession.setAccessToken("access_token");
-        spotifySession.setRefreshToken("refresh_token");
-        spotifySession.setExpiresAt(Instant.now().plus(3600, ChronoUnit.SECONDS));   
+        SpotifySession spotifySession = new SpotifySession();
+        spotifySession.setAccessToken((String) responseBody.get("access_token"));        
+        Integer expiresIn = (Integer) responseBody.get("expires_in");
+        spotifySession.setExpiresAt(Instant.now().plus(expiresIn != null ? expiresIn : 3600, ChronoUnit.SECONDS));
 
         // 3. Crear un ID único de sesión
         String sessionId = UUID.randomUUID().toString();
 
         // 4. Guardar en el SessionStore
         sessionStore.save(sessionId, spotifySession);
-
+        System.out.println("llego a la segunda");
         // 5. Generar un JWT con ese sessionId
         String jwt = jwtService.generateToken(sessionId);
 
+        System.out.println("llego a la tercera");
         // 6. Enviar el JWT al frontend
-        return ResponseEntity.ok(Map.of("token", jwt));
+        String frontendRedirect = "http://localhost:4200/token=" + jwt;
+        HttpHeaders redirectHeaders = new HttpHeaders();
+        redirectHeaders.setLocation(URI.create(frontendRedirect));
+        
+        return ResponseEntity.status(HttpStatus.FOUND).headers(redirectHeaders).build();
+
     } else {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Error al obtener token de Spotify");
     }
-}
-
-
-    @PostMapping("/token")          // Obtiene el token de acceso
-    public ResponseEntity<String> getAccessToken(@RequestBody String code) {
-        // Aquí manejarías el intercambio del código por un token de acceso
-        return ResponseEntity.ok("Access token for code: " + code);
     }
+
+
+
     @PostMapping("/refresh")        // Refresh token
     public ResponseEntity<String> refreshToken(@RequestBody String refreshToken) {
         // Aquí manejarías el refresh del token
