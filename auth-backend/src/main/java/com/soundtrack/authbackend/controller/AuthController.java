@@ -123,12 +123,14 @@ public ResponseEntity callbackSpotify(
             request,
             Map.class
     );
-    System.out.println("Response from Spotify: " + response);
+    System.out.println("Response from Spotify: " + response.getBody());
+    System.out.println("Response status: " + response.getStatusCode());
+    System.out.println("Response headers: " + response.getHeaders());
     if (response.getStatusCode().is2xxSuccessful()) {
         Map<String, Object> responseBody = response.getBody();
 
         SpotifySession spotifySession = new SpotifySession();
-        spotifySession.setAccessToken( responseBody.get("access_token"));        
+        spotifySession.setAccessToken( responseBody.get("access_token").toString());        
         Integer expiresIn = (Integer) responseBody.get("expires_in");
         spotifySession.setExpiresAt(Instant.now().plus(expiresIn != null ? expiresIn : 3600, ChronoUnit.SECONDS));
 
