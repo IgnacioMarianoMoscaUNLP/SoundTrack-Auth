@@ -2,7 +2,7 @@
 
 **Tecnologías**:  
 - Backend: Java, Spring Boot, JWT, MySQL, Spotify Web API.  
-- Frontend: Angular (mínimo para demostración).  
+- Documentacion API: Serie de pruebas para la api. 
 
 **Descripción**:  
 Aplicación web que permite a los usuarios buscar canciones mediante la API de Spotify, autenticarse con JWT y guardar sus canciones favoritas en una base de datos relacional.  
@@ -14,8 +14,8 @@ Aplicación web que permite a los usuarios buscar canciones mediante la API de S
 - ✅ Pruebas unitarias en servicios críticos (JUnit + Mockito).  
 
 **Objetivo personal**:  
-Demostrar mi capacidad para desarrollar sistemas backend robustos, manejar seguridad y consumir APIs complejas.  
+Demostrar mi capacidad para desarrollar sistemas backend robustos, manejar seguridad y consumir APIs.  
 
 **Enlaces**:  
 - [Código en GitHub](https://github.com/tu-usuario/soundtrack-auth)  
-- [Demo en vivo]  
+- API Documentation
