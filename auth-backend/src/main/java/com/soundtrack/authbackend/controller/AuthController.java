@@ -98,6 +98,9 @@ public ResponseEntity callbackSpotify(
     @RequestParam(required = false) String state,
     HttpSession session) {
 
+        
+        
+    System.out.println("Received code: " + code);
     /*if (!state.equals(session.getAttribute("oauth_state"))) {
         return redirectToErrorPage("Invalid state parameter");
     }*/
@@ -112,7 +115,9 @@ public ResponseEntity callbackSpotify(
     headers.set("Authorization", "Basic " + encodedCredentials);
 
     MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-    body.add("grant_type", "client_credentials");
+    body.add("grant_type", "authorization_code");
+    body.add("code", code);
+    body.add("redirect_uri", "http://127.0.0.1:8080/api/auth/callback");
     
 
     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
@@ -128,7 +133,7 @@ public ResponseEntity callbackSpotify(
     System.out.println("Response headers: " + response.getHeaders());
     if (response.getStatusCode().is2xxSuccessful()) {
         Map<String, Object> responseBody = response.getBody();
-
+        System.out.println(responseBody.values());
         SpotifySession spotifySession = new SpotifySession();
         spotifySession.setAccessToken( responseBody.get("access_token").toString());        
         Integer expiresIn = (Integer) responseBody.get("expires_in");
