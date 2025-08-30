@@ -149,13 +149,28 @@ public ResponseEntity callbackSpotify(
         String jwt = jwtService.generateToken(sessionId);
 
         System.out.println(jwt);
-    
-        headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + jwt); // o "X-Auth-Token", según prefieras
+    // Devolver HTML simple con el JWT
+    String html = "<!DOCTYPE html>" +
+                  "<html lang='es'>" +
+                  "<head>" +
+                  "  <meta charset='UTF-8'>" +
+                  "  <title>Login exitoso</title>" +
+                  "  <style>" +
+                  "    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }" +
+                  "    h1 { color: green; }" +
+                  "    p.jwt { font-size: 24px; font-weight: bold; word-break: break-all; }" +
+                  "  </style>" +
+                  "</head>" +
+                  "<body>" +
+                  "  <h1>Login exitoso</h1>" +
+                  "  <p>Usa este JWT en Postman o Docs para consumir la API:</p>" +
+                  "  <p class='jwt'>" + jwt + "</p>" +
+                  "</body>" +
+                  "</html>";
 
-        return ResponseEntity.ok()
-        .headers(headers)
-        .build();
+    return ResponseEntity.ok()
+            .contentType(MediaType.TEXT_HTML)
+            .body(html);
 
     } else {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
