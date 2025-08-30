@@ -9,9 +9,9 @@ Aplicación web que permite a los usuarios buscar canciones mediante la API de S
 
 **Destacado**:  
 - ✅ Autenticación segura con **JWT** (tokens de acceso/refresh).  
-- ✅ Integración con **API externa** (Spotify) usando Spring Boot.  
-- ✅ Gestión de base de datos no relacional (Mongodb) para usuarios y favoritos.  
-- ✅ Pruebas unitarias en servicios críticos (JUnit + Mockito).  
+- ✅ Integración con **API externa** (Spotify) usando Spring Boot.
+- Documentación de API (Postman)
+
 
 **Objetivo personal**:  
 Demostrar mi capacidad para desarrollar sistemas backend robustos, manejar seguridad y consumir APIs.  
