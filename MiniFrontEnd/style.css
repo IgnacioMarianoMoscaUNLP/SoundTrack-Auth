@@ -3,7 +3,15 @@ body {
   text-align: center;
   margin-top: 50px;
 }
+
 button {
   padding: 10px 20px;
   font-size: 16px;
+}
+
+#jwtText {
+  font-size: 24px;
+  font-weight: bold;
+  word-break: break-all;
+  margin: 20px 0;
 }

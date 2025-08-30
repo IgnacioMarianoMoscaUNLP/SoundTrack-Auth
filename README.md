@@ -10,12 +10,15 @@ Aplicación web que permite a los usuarios buscar canciones mediante la API de S
 **Destacado**:  
 - ✅ Autenticación segura con **JWT** (tokens de acceso/refresh).  
 - ✅ Integración con **API externa** (Spotify) usando Spring Boot.
+-Tres archivos para hacer oauth2 posible
 - Documentación de API (Postman)
 
 
 **Objetivo personal**:  
 Demostrar mi capacidad para desarrollar sistemas backend robustos, manejar seguridad y consumir APIs.  
 
-**Enlaces**:  
-- [Código en GitHub](https://github.com/tu-usuario/soundtrack-auth)  
-- API Documentation
+**Orden de ejecucion**
+-Descargue la carpeta 'MiniFrontEnd'
+-Abra el achivo index de carpeta en un navegador
+-inicie sesión con spotify
+-Usar JWT en la documentación Postman
