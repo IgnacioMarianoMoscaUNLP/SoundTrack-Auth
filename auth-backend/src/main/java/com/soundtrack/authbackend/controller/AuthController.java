@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 // import org.springframework.boot.web.servlet.server.Session; // Removed, use HttpSession instead
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -148,8 +149,20 @@ public ResponseEntity callbackSpotify(
         // 5. Generar un JWT con ese sessionId
         String jwt = jwtService.generateToken(sessionId);
 
-        System.out.println(jwt);
-    // Devolver HTML simple con el JWT
+
+    headers = new HttpHeaders();
+    headers.set("Authorization", "Bearer " + spotifySession.getAccessToken());
+    RestTemplate restTemplate1 = new RestTemplate();
+    HttpEntity<Void> entity = new HttpEntity<>(headers);
+        ResponseEntity<Map> response2 = restTemplate.exchange(
+            "https://api.spotify.com/v1/me",
+            HttpMethod.GET,
+            entity,
+            Map.class
+        );
+        Map<String, Object> profile = response2.getBody();
+        spotifySession.setUserId((String) profile.get("id"));
+        sessionStore.save(sessionId, spotifySession); 
     String html = "<!DOCTYPE html>" +
                   "<html lang='es'>" +
                   "<head>" +

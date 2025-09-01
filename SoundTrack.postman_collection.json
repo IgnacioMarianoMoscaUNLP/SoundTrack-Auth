@@ -1,0 +1,119 @@
+{
+	"info": {
+		"_postman_id": "fd203ee4-9a40-41c5-98c9-617b452d5903",
+		"name": "SoundTrack",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47825739",
+		"_collection_link": "https://ignacio-doe-s-team.postman.co/workspace/ignacio-doe's-Workspace~e9d61d47-bdfa-4b0b-850f-cfde42944f7e/collection/47825739-fd203ee4-9a40-41c5-98c9-617b452d5903?action=share&source=collection_link&creator=47825739"
+	},
+	"item": [
+		{
+			"name": "perfilSpotify",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/user/profile",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "topTracks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/user/topTracks",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"topTracks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "topArtist",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "playlists",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/playlists/all",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"playlists",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5NTVlNWU2Mi1iMDRhLTQyZTUtOWRmMC0xOTBlMmU2NjRjNDMiLCJpYXQiOjE3NTY3NTc2NjgsImV4cCI6MTc1Njc2MTI2OH0.Iw-zCTWVP6F-pwc8TzDakj0EIt2sCUx9M3lyBjBVKDI",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -13,5 +13,6 @@ public class SpotifySession {
     private String refreshToken;
     private Instant expiresAt;
     private String displayName;
+    private String userId;
     // getters/setters
 }

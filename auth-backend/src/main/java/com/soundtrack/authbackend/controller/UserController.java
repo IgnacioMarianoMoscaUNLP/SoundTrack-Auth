@@ -25,7 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 import com.soundtrack.authbackend.dto.ArtistDTO;
-import com.soundtrack.authbackend.dto.SpotifyTopTracksResponse;
+
 import com.soundtrack.authbackend.dto.TrackDTO;
 import com.soundtrack.authbackend.dto.UserDTO;
 import com.soundtrack.authbackend.entity.SpotifySession;
