@@ -1,13 +1,18 @@
 package com.soundtrack.authbackend.dto;
+
+import java.util.List;
+
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Getter;
 import lombok.Setter;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Setter
 @Getter
-public class TrackDTO {
-    private String name;
-    private String artist;
-    private String album;
+public class SpotifyTopTracksResponse {
+    private List<TrackDTO> tracks;
+
+    // getters y setters
 }
