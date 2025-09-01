@@ -1,7 +1,7 @@
 ### 🎵 SoundTrack Auth | Backend con Spring Boot & Spotify API  
 
 **Tecnologías**:  
-- Backend: Java, Spring Boot, JWT, MySQL, Spotify Web API.  
+- Backend: Java, Spring Boot, JWT, Spotify Web API.  
 - Documentacion API: Serie de pruebas para la api. 
 
 **Descripción**:  
