@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+
+import com.soundtrack.authbackend.dto.ArtistDTO;
 import com.soundtrack.authbackend.dto.SpotifyTopTracksResponse;
 import com.soundtrack.authbackend.dto.TrackDTO;
 import com.soundtrack.authbackend.dto.UserDTO;
@@ -106,9 +108,40 @@ public class UserController {
 }
 
 
-    @GetMapping("/preferences")     // Preferencias de la app
-    public ResponseEntity<UserDTO> getPreferences() {
-        return ResponseEntity.ok(new UserDTO());
+    @GetMapping("/topArtists")     
+    public ResponseEntity<List<ArtistDTO>> getPreferences(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+    
+         String jwt = authorizationHeader.substring(7);
+        String sessionId = jwtService.validateAndGetSessionId(jwt);
+        SpotifySession session = sessionStore.get(sessionId);
+
+    
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + session.getAccessToken());
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        ResponseEntity<Map<String, Object>> response =
+          restTemplate.exchange(
+        "https://api.spotify.com/v1/me/top/artists",
+             HttpMethod.GET,
+             entity
+                , (Class<Map<String, Object>>)(Class<?>)Map.class
+        );
+        List<Map<String, Object>> items = (List<Map<String, Object>>) response.getBody().get("items");
+        List<ArtistDTO> topArtist= new ArrayList<>();
+        for (Map<String, Object> item : items) {     
+            ArtistDTO artist = new ArtistDTO();
+            artist.setName((String) item.get("name"));
+            artist.setGenre((String) item.get("genres").toString());
+            artist.setPopularity((Integer) item.get("popularity"));
+
+            Map<String, Object> followers = (Map<String, Object>) item.get("followers");
+            artist.setFollowers((Integer) followers.get("total"));            
+            topArtist.add(artist);
+        }
+        return ResponseEntity.ok(topArtist);
     }
 
     @PutMapping("/preferences")     // Actualizar preferencias
