@@ -64,7 +64,17 @@ public class AuthController {
         session.setAttribute("oauth_state", state);        
         
         String redirectUri = "http://127.0.0.1:8080/api/auth/callback"; // Reemplaza con tu URI de redirección
-        String scope = "user-read-private user-read-email user-top-read user-read-recently-played";        
+        String scope = "user-read-private " +
+               "user-read-email " +
+               "user-top-read " +
+               "user-read-recently-played " +
+               "user-library-read " +
+               "user-library-modify " +
+               "playlist-read-private " +
+               "playlist-read-collaborative " +
+               "user-follow-read " +
+               "user-read-playback-state " +
+               "user-modify-playback-state";      
         String encodedScope = URLEncoder.encode(scope, StandardCharsets.UTF_8);
 
         // Guardar el estado en la sesión para validación posterior

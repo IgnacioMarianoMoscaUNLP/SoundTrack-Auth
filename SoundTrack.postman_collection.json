@@ -76,7 +76,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "tracksFavoritos",
 			"request": {
 				"method": "GET",
 				"header": []
@@ -89,7 +89,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5NTVlNWU2Mi1iMDRhLTQyZTUtOWRmMC0xOTBlMmU2NjRjNDMiLCJpYXQiOjE3NTY3NTc2NjgsImV4cCI6MTc1Njc2MTI2OH0.Iw-zCTWVP6F-pwc8TzDakj0EIt2sCUx9M3lyBjBVKDI",
+				"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiOTJiYWNkOC0zYjQwLTRhMDEtYjkzMi01NjQ0Y2Y3ZmMxN2MiLCJpYXQiOjE3NTY3NjgwNDIsImV4cCI6MTc1Njc3MTY0Mn0.Z0hROdd4R8uI-f-A0K-iO5jx-eDgE67wqKTDpEuoNHc",
 				"type": "string"
 			}
 		]

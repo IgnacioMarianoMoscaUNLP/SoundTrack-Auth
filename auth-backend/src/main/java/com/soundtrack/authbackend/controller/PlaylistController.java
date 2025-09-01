@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.sound.midi.Track;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,11 +20,14 @@ import org.springframework.web.client.RestTemplate;
 
 import com.soundtrack.authbackend.dto.ArtistDTO;
 import com.soundtrack.authbackend.dto.PlaylistDTO;
+import com.soundtrack.authbackend.dto.TrackDTO;
 import com.soundtrack.authbackend.entity.SpotifySession;
 import com.soundtrack.authbackend.service.JwtService;
 import com.soundtrack.authbackend.service.SessionStore;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+
 
 @RestController
 @RequestMapping("/api/playlists")
@@ -31,7 +36,78 @@ public class PlaylistController {
     private SessionStore sessionStore;
     @Autowired
     private JwtService jwtService;
-    
+
+    class totalCount{
+        private int total;
+
+        public int getTotal() {
+            return total;
+        }
+
+        public void setTotal(int total) {
+            this.total = total;
+        }
+    }
+    @GetMapping("/favs")
+    public ResponseEntity<List<TrackDTO>> getPlaylistTracks(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        String jwt = authorizationHeader.substring(7);
+        String sessionId = jwtService.validateAndGetSessionId(jwt);
+        SpotifySession session = sessionStore.get(sessionId);
+        List<TrackDTO> tracks = new ArrayList<>();
+        int offset=0;
+        
+         totalCount total= new totalCount();
+         total.setTotal(1000000000);
+        for(int i=0; i<total.getTotal();i+=50){
+          try{               
+            tracks.addAll(this.favsTraks(session.getAccessToken(), 50, total));
+            System.out.println("pagina:: "+i); 
+            offset+=50;
+            }catch(Exception e){
+                break;
+            }
+        }
+        return ResponseEntity.ok(tracks);
+    }
+
+    private List<TrackDTO> favsTraks(String token, int limit,totalCount total) {
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        try{
+        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+            "https://api.spotify.com/v1/me/tracks?+limit="+limit,
+            HttpMethod.GET,
+            entity,
+            (Class<Map<String, Object>>)(Class<?>)Map.class
+        );
+        total.setTotal((Integer) response.getBody().get("total"));
+        List<Map<String, Object>> items = (List<Map<String, Object>>) response.getBody().get("items");
+        List<TrackDTO> tracks = new ArrayList<>();
+        for (Map<String, Object> item : items) {
+            TrackDTO trackDTO = new TrackDTO();             
+            Map<String,Object> trackObject =  (Map<String, Object>) item.get("track");
+             Map<String, Object> trackArtistObject = (Map<String, Object>) trackObject.get("artists");
+             Map<String, Object> albumObject = (Map<String, Object>) trackObject.get("album");
+             
+            trackDTO.setName((String) trackObject.get("name"));
+            trackDTO.setArtist((String) trackArtistObject.get("name"));
+            trackDTO.setAlbum((String) albumObject.get("name"));
+            tracks.add(trackDTO);
+            System.out.println(trackDTO.getName());
+        }        
+
+        return tracks;
+
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            throw e;
+        }
+
+        }
     @GetMapping("/throwback")       // Playlist de canciones antiguas
     public ResponseEntity<String> throwbackPlaylist() {
         // Aquí manejarías la lógica para la playlist de canciones antiguas

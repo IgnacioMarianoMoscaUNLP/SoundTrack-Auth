@@ -10,4 +10,5 @@ public class TrackDTO {
     private String name;
     private String artist;
     private String album;
+    private String releaseDate;
 }
