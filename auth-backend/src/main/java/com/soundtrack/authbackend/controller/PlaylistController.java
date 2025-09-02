@@ -1,6 +1,7 @@
 package com.soundtrack.authbackend.controller;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ public class PlaylistController {
         for(int i=0; i<total.getTotal();i+=50){
           try{               
             tracks.addAll(this.favsTraks(session.getAccessToken(), 50, total));
-            System.out.println("pagina:: "+i); 
+            System.out.println("pagina:: "+i/50); 
             offset+=50;
             }catch(Exception e){
                 break;
@@ -77,29 +78,30 @@ public class PlaylistController {
         headers.set("Authorization", "Bearer " + token);
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<Void> entity = new HttpEntity<>(headers);
-        try{
-        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-            "https://api.spotify.com/v1/me/tracks?+limit="+limit,
-            HttpMethod.GET,
-            entity,
-            (Class<Map<String, Object>>)(Class<?>)Map.class
-        );
-        total.setTotal((Integer) response.getBody().get("total"));
-        List<Map<String, Object>> items = (List<Map<String, Object>>) response.getBody().get("items");
-        List<TrackDTO> tracks = new ArrayList<>();
-        for (Map<String, Object> item : items) {
-            TrackDTO trackDTO = new TrackDTO();             
-            Map<String,Object> trackObject =  (Map<String, Object>) item.get("track");
-             Map<String, Object> trackArtistObject = (Map<String, Object>) trackObject.get("artists");
-             Map<String, Object> albumObject = (Map<String, Object>) trackObject.get("album");
-             
-            trackDTO.setName((String) trackObject.get("name"));
-            trackDTO.setArtist((String) trackArtistObject.get("name"));
-            trackDTO.setAlbum((String) albumObject.get("name"));
-            tracks.add(trackDTO);
-            System.out.println(trackDTO.getName());
-        }        
-
+        try{            
+        LinkedHashMap<String, Object> response = restTemplate.exchange(
+                "https://api.spotify.com/v1/me/tracks?limit="+limit,
+                HttpMethod.GET,
+                entity,
+                LinkedHashMap.class
+            ).getBody(); 
+                List<Object> items = (List<Object>) response.get("items");
+                total.setTotal((Integer) response.get("total"));
+                List<TrackDTO> tracks = new ArrayList<>();
+            for(Object itemObj : items) {
+                LinkedHashMap<String, Object> item = (LinkedHashMap<String, Object>) itemObj;
+                LinkedHashMap<String, Object> track =  item.get("track") instanceof LinkedHashMap ? (LinkedHashMap<String, Object>) item.get("track") : null;
+                 if (track == null) {
+                    continue; // Omitir si no hay información de la pista
+                }
+                TrackDTO trackDTO = new TrackDTO();
+                trackDTO.setName((String) track.get("name"));                
+                Map<String, Object> album = (Map<String, Object>) track.get("album");
+                Map<String, Object> artist = ((List<Map<String, Object>>) track.get("artists")).get(0);
+                trackDTO.setAlbum((String) album.get("name"));
+                trackDTO.setArtist((String) artist.get("name"));
+                tracks.add(trackDTO);
+            }
         return tracks;
 
         }catch(Exception e){
